@@ -57,7 +57,9 @@ public class getImage {
                 } catch (SocketTimeoutException e) {
                 }
             }
-            Images.add(Image);
+            if (Image.size() > 0) {
+                Images.add(Image);
+            }
         }
         return Images;
     }
