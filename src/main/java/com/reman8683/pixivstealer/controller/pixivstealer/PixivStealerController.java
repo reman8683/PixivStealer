@@ -1,16 +1,32 @@
 package com.reman8683.pixivstealer.controller.pixivstealer;
 
+import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
+import org.jsoup.Jsoup;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class PixivStealerController {
     @SneakyThrows
-    @PostMapping(value = "/pixivstealer", produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] pixivstealer(@RequestBody ImageSearchVo imageSearchVo) {
-        return imageSearchVo.image();
+    @PostMapping(value = "/pixivstealer/getimage", produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getImage(@RequestParam String tag) {
+        byte[] image = Jsoup.connect(getImage.getImage(tag, 1).get(0).getAsJsonObject().get("url").getAsString())
+                .timeout(500)
+                .ignoreContentType(true)
+                .header("Referer","https://pixiv.net/")
+                .execute().bodyAsBytes();
+        return image;
+    }
+
+    @SneakyThrows
+    @PostMapping(value = "/pixivstealer/geturl")
+    public String getUrl(@RequestParam String tag, @RequestParam int count) {
+        JsonObject post = new JsonObject();
+        post.addProperty("Referer","https://pixiv.net/");
+        post.add("image", getImage.getImage(tag, count));
+        return post.toString();
     }
 }
