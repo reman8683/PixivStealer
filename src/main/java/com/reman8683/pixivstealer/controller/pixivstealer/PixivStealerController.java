@@ -23,7 +23,7 @@ public class PixivStealerController {
 
     @SneakyThrows
     @PostMapping(value = "/pixivstealer/geturl")
-    public String getUrl(@RequestParam String tag, @RequestParam int count) {
+    public String getUrl(@RequestParam String tag, @RequestParam(required = false, defaultValue = "1") int count) {
         JsonObject post = new JsonObject();
         post.addProperty("Referer","https://pixiv.net/");
         post.add("image", getImage.getImage(tag, count));
